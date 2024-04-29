@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Ticket Booking - Login</title>
+    <style>
+        body {
+  font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+         background-image: url("https://www.usu.edu/today/images/stories/xl/23_ENGR_Battery-FLIRT-Train.jpg");
+         background-repeat: no-repeat;
+    background-size: cover; /* Ensure the background image covers the entire viewport */
+    background-position: center; /* Center the background image */
+    min-height: 100vh;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+             background-color:rgb(255, 71, 71);
+            
+        }
+       header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+      min-width:100%;
+      position:fixed;
+      top:0px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+h2 {
+    margin-top: 5px;
+}
+        .container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+     		width:100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to TrainTicketBooking</h1>
+        <h2>Please Login</h2>
+    </header>
+    <div class="container">
+        <h2>Train Ticket Booking - Login</h2>
+        <form id="login-form"  action="Login" method="post">
+            <div class="form-group">
+                <label for="username">Username or Email:</label>
+                <input type="text" id="username" name="username" required/>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required/>
+            </div>
+            <div class="forgot-password">
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</body>
+</html>

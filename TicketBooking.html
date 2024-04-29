@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Ticket Booking</title>
+    <style>
+body {
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Center vertically */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-image: url("https://img.freepik.com/premium-photo/train-railway-sunset-concept-travel-transport_861724-15136.jpg");
+}
+
+.container {
+    min-width: 600px;
+    margin-left: auto; /* Push the container to the right side of the page */
+    margin-right:20px;
+    background-color: rgba(255, 255, 255, 0.8); /* Transparent background to see the background image */
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+.passenger-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.passenger-table th,
+.passenger-table td {
+    border: 1px solid #ccc;
+    padding: 5px;
+    text-align: left;
+}
+
+.passenger-table th {
+    background-color: #f2f2f2;
+}
+
+.passenger-table input[type="text"],
+.passenger-table select {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+/* Style for the buttons container */
+.buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.buttons button:hover {
+    background-color: #45a049;
+}
+
+.row1,
+.row2 {
+    display: flex;
+    justify-content: space-between;
+    margin: 50px;
+    font-weight:bold;
+}
+
+.subrow {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.subrow:last-child {
+    margin-right: 0;
+}
+
+.row2 select {
+    flex: 2;
+}
+.row1 input,.row1 select,.row2 select{
+padding:10px;
+margin-left:10px;
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Train Ticket Booking</h2>
+        <form id="booking-form" action="TotalFare" method="post">
+				<div class="row1">
+				<div class="subrow">
+                <label for="departure">From:</label>
+                <select id="departure" name="departure">
+                
+                </select>
+					</div>
+   <div class="subrow">
+                <label for="destination">To:</label>
+                <select id="destination" name="destination">
+                </select>
+                </div>
+                </div>
+       <div class="row2">
+                <label for="train">Trains:</label>
+                <select id="train" name="train">
+                </select>
+            </div>
+         <div class="row1">
+            <div class="subrow">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date">
+            </div>
+            <div class="subrow">
+                <label for="class">Class:</label>
+                <select id="class" name="class">
+                    <option value="Economy">Economy</option>
+                    <option value="Business">Business</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            </div>
+
+      
+        <h2>Passenger Details</h2>
+        <table class="passenger-table">
+            <thead>
+                <tr>
+                	<th>SNO</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Gender</th>
+                    <th>Berth Preference</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Passenger details will be displayed here -->
+            </tbody>
+        </table>
+        <div class="buttons">
+            <input type="hidden" id="numRows" name="numRows"> 
+        
+        <button id="AP" type="button">Add Passenger</button>
+        <button type="submit" id="BT">Book Tickets</button>
+        </div>
+        </form>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script >
+
+$(document).ready(function(){
+
+        $.ajax({
+            url:'AllStationServlet',
+            method:'GET',
+            dataType:'text',
+            success:function(response){
+            	var stationNames = response.split(','); 
+                $.each(stationNames, function(index,stationName) {
+                 $(" #departure , #destination ").append($('<option>', {
+                	   value: stationName,
+                       text: stationName
+            }));
+        });
+            },
+            error: function(xhr, status, error) { // Callback function to handle errors
+                console.error('Error:', error);
+                // Handle errors here
+            }
+        })
+     $("#destination,#departure").on('change', function() {
+  
+    var dept=$("#departure").val();
+    var dest=$("#destination").val();
+    if(dept===dest){
+    	alert("ERROR: same stations");
+    }
+    $.ajax({
+    	url:'TrainServlet',
+    	data:{p1:dept,p2:dest},
+    	method:'GET',
+    	success:function(res){		
+    		console.log("servlet Called Successfully........");
+    		if(res===""){
+    			alert("NO TRAINS SCHEDULED");
+    		}
+    		else{
+    		var tnames=res.split(",");
+    		$("#train").empty();
+    	 $('<optgroup>').attr('label', "TNO			TName").appendTo('#train');
+    		$.each(tnames,function(index,tname){
+    			if(tname!=""){
+    			$("#train").append($('<option>',{
+    				value:tname,
+    				text:tname
+    			}))
+    			
+    			}
+    		})
+    	   }
+    	}
+    })
+});
+        $('#AP').on('click', function() {
+        	var len=$(".passenger-table tr").length;
+        	if(len<=6){
+            var lastSerialNumber = $('.passenger-table tbody tr:last-child td:first-child').text();
+            var ns = parseInt(lastSerialNumber) + 1 || 1; // If no rows exist, set ns to 1
+
+          
+            var newRow = '<tr>' +
+                '<td>' + ns + '</td>' +
+                '<td><input type="text" name="pname_' +ns+ '"/></td>' +
+                '<td><input type="text" name="page_' +ns+ '"/></td>' +
+                '<td><input type="radio" name="gender_' + ns + '" value="Male">Male' +
+                '<input type="radio" name="gender_' + ns + '" value="Female">Female' +
+                '<input type="radio" name="gender_' + ns + '" value="Others">Others</td>' +
+                '<td><select name="bpref_' +ns+ '">' +
+                '<option>Lower</option>' +
+                '<option>Middle</option>' +
+                '<option>Upper</option>' +
+                '</select></td>' +
+                '<td><button class="removePassengerButton type="button"">Remove</button></td>' +
+                '</tr>';
+            $('.passenger-table tbody').append(newRow);
+        	}
+        	else{
+        		alert("Error : LIMIT EXCEDED")
+        	}
+        });
+        $(document).on('click', '.removePassengerButton', function() {
+            $(this).closest('tr').remove(); // Remove the closest row (tr) containing the button
+        });
+        $('#booking-form').submit(function(e) {
+            e.preventDefault(); // Prevent form submission
+            var numRows = $('.passenger-table tr').length;
+            $('#numRows').val(numRows); // Update the value of the hidden input field
+            var dept=$("#departure").val();
+            var dest=$("#destination").val();
+            if(dept===dest){
+            	alert("ERROR: same Stations");
+            	return;
+            }
+            if(!$("#date").val()){
+            	alert("ERROR: Select a Date");
+            	return;
+            }
+            if(numRows === 1){
+                alert("ERROR: Please add passengers");  
+                return;
+                }
+                this.submit(); 
+        });
+
+})
+$(document).ready(function() {
+    // Get the current date
+    var today = new Date();
+
+    // Format the date as "yyyy-mm-dd"
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+    var dd = String(today.getDate()).padStart(2, '0');
+    var currentDate = yyyy + '-' + mm + '-' + dd;
+
+    // Set the minimum date for the input element to the current date
+    $("#date").attr("min", currentDate);
+});
+
+
+</script>
+</html>
